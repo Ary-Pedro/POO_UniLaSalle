@@ -2,7 +2,7 @@ package controller;
 
 import viewer.JanelaPrincipal;
 
-public class CtrlPrograma {
+public class CtrlPrograma extends CtrlAbstrato{
 
 	//
 	// ATRIBUTOS DE RELACIONAMENTO
@@ -19,6 +19,9 @@ public class CtrlPrograma {
 	// MÉTODOS
 	//
 	public CtrlPrograma() {
+		// chamada ao construtor da superclasse (CtrlAbstrato). No
+		// caso do CtrlPrograma, ele não tem um CtrlPai.
+		super(null);
 		this.janela = new JanelaPrincipal(this);
 		this.ctrlIncluirPessoa = null;
 		this.ctrlIncluirContaBancaria = null;
@@ -34,10 +37,6 @@ public class CtrlPrograma {
 			this.janela.notificar("Você já iniciou a funcionalidade de Incluir Pessoa");
 	}
 
-	public void finalizarIncluirPessoa() {
-		this.ctrlIncluirPessoa = null;
-	}
-
 	public void iniciarIncluirContaBancaria() {
 		// Verificando se o caso de uso não está em execução
 		if (this.ctrlIncluirContaBancaria == null)
@@ -48,16 +47,31 @@ public class CtrlPrograma {
 			this.janela.notificar("Você já iniciou a funcionalidade de Incluir Conta Bancária");
 	}
 
-	public void finalizarIncluirContaBancaria() {
-		this.ctrlIncluirContaBancaria = null;
+	public void ctrlFilhoFinalizado(ICtrl ctrlFilho) {
+		if(ctrlFilho instanceof CtrlIncluirPessoa)			
+			this.ctrlIncluirPessoa = null;
+		else if(ctrlFilho instanceof CtrlIncluirContaBancaria)
+			this.ctrlIncluirContaBancaria = null;
 	}
 
-	public void encerrarPrograma() {
+	/**
+	 * Implementação do método presente em ICtrl. 
+	 * Fará a finalização do programa
+	 */
+	public void finalizar() {
 		this.janela.notificar("Encerrando o programa!");
-		this.janela.fechar();
+		this.janela.finalizar();
 		System.exit(0);
 	}
 
+	/**
+	 * Implementação do método herdado de ICtrl. Neste caso,
+	 * como é o controlador do programa, não há bem tangível
+	 */
+	public Object getBemTangivel() {
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		new CtrlPrograma();
 	}

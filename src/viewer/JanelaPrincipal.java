@@ -1,29 +1,27 @@
 package viewer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.CtrlIncluirContaBancaria;
 import controller.CtrlPrograma;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-public class JanelaPrincipal extends JFrame {
+public class JanelaPrincipal extends JanelaAbstrata {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	//
-	// Atributo de Relacionamento
-	//
-	final private CtrlPrograma ctrl; 
 	/**
 	 * Create the frame.
 	 */
 	public JanelaPrincipal(CtrlPrograma c) {
-		this.ctrl = c;
+		super(c);
 		setTitle("Menu Principal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 574, 222);
@@ -36,6 +34,7 @@ public class JanelaPrincipal extends JFrame {
 		JButton btIncluirPessoa = new JButton("Incluir Pessoa");
 		btIncluirPessoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				CtrlPrograma ctrl = (CtrlPrograma)getCtrl();
 				ctrl.iniciarIncluirPessoa();
 			}
 		});
@@ -45,6 +44,7 @@ public class JanelaPrincipal extends JFrame {
 		JButton btIncluirContaBancaria = new JButton("Incluir Conta Bancária");
 		btIncluirContaBancaria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				CtrlPrograma ctrl = (CtrlPrograma)getCtrl();
 				ctrl.iniciarIncluirContaBancaria();
 			}
 		});
@@ -54,19 +54,12 @@ public class JanelaPrincipal extends JFrame {
 		JButton btSair = new JButton("Sair");
 		btSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ctrl.encerrarPrograma();
+				CtrlPrograma ctrl = (CtrlPrograma)getCtrl();
+				ctrl.finalizar();
 			}
 		});
 		btSair.setBounds(449, 55, 99, 63);
 		contentPane.add(btSair);
 		this.setVisible(true);
 	}
-	
-	public void notificar(String texto) {
-		JOptionPane.showMessageDialog(null, texto);		
-	}
-
-	public void fechar() {
-		this.setVisible(false);		
-	}	
 }

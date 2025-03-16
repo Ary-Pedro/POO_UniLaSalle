@@ -2,31 +2,34 @@ package controller;
 
 import model.ModelException;
 import model.Pessoa;
+import viewer.IViewer;
 import viewer.JanelaPessoa;
 
-public class CtrlIncluirPessoa {
+public class CtrlIncluirPessoa extends CtrlAbstrato {
 	//
 	// ATRIBUTOS 
 	// 
 	// Todo Controlador deve ter um atributo para guardar a referência
 	// para o objeto viewer com quem se relaciona.
 	//
-	private JanelaPessoa janela;
-	private CtrlPrograma ctrlPai;
+	private IViewer      meuViewer;
+	private Pessoa       pessoaCriada;
 	
 	//
 	// MÉTODOS
 	//
 	public CtrlIncluirPessoa(CtrlPrograma c) {
-		this.ctrlPai = c;
-		this.janela = new JanelaPessoa(this);
+		super(c);
+		this.meuViewer = new JanelaPessoa(this);
+		this.pessoaCriada = null;
+		this.meuViewer.apresentar();
 	}
 	
 	public void efetuarInclusao(String cpf, String nome, int idade) {
 		try {
-			Pessoa p = new Pessoa(cpf, nome, idade);
+			this.pessoaCriada = new Pessoa(cpf, nome, idade);
 		} catch (ModelException e1) {
-			this.janela.notificar("Erro: " + e1);
+			this.meuViewer.notificar("Erro: " + e1);
 			return;
 		}
 		// TODO Fazer os procedimentos de persistência
@@ -35,8 +38,12 @@ public class CtrlIncluirPessoa {
 	}
 	
 	public void finalizar() {
-		this.janela.fechar();
-		this.ctrlPai.finalizarIncluirPessoa();
+		this.meuViewer.finalizar();
+		this.getCtrlPai().ctrlFilhoFinalizado(this);
+	}
+	
+	public Object getBemTangivel() {
+		return this.pessoaCriada;
 	}
 
 }

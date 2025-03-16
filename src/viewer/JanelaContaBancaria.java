@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 import controller.CtrlIncluirContaBancaria;
 
-public class JanelaContaBancaria extends JFrame {
+public class JanelaContaBancaria extends JanelaAbstrata {
 
 	private static final long serialVersionUID = 1L;
 	//
@@ -25,16 +25,11 @@ public class JanelaContaBancaria extends JFrame {
 	private JTextField tfLimite;
 	private JTextField tfSaldo;
 	
-	//
-	// Atributos de Relacionamento
-	//
-	final private CtrlIncluirContaBancaria ctrl;
-
 	/**
 	 * Create the frame.
 	 */
 	public JanelaContaBancaria(CtrlIncluirContaBancaria c) {
-		this.ctrl = c;
+		super(c);
 		setTitle("Conta Bancária");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 417, 300);
@@ -105,7 +100,7 @@ public class JanelaContaBancaria extends JFrame {
 					JOptionPane.showMessageDialog(null, "Valor de saldo Inválido: " + aux);
 					return;
 				}
-				
+				CtrlIncluirContaBancaria ctrl = (CtrlIncluirContaBancaria)getCtrl();
 				ctrl.efetuarInclusao(numero, limite, saldo);
 			}
 		});
@@ -115,19 +110,12 @@ public class JanelaContaBancaria extends JFrame {
 		JButton btCancelar = new JButton("Cancelar");
 		btCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				CtrlIncluirContaBancaria ctrl = (CtrlIncluirContaBancaria)getCtrl();
 				ctrl.finalizar();
 			}
 		});
 		btCancelar.setBounds(251, 200, 89, 23);
 		contentPane.add(btCancelar);
 		this.setVisible(true);
-	}
-
-	public void notificar(String texto) {
-		JOptionPane.showMessageDialog(null, texto);		
-	}
-
-	public void fechar() {
-		this.setVisible(false);		
 	}
 }
