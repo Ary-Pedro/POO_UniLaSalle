@@ -1,30 +1,32 @@
 package viewer;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controller.CtrlIncluirContaBancaria;
 import controller.CtrlPrograma;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class JanelaPrincipal extends JanelaAbstrata {
+public class JanelaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
+	//
+	// Atributo de Relacionamento
+	//
+	final private CtrlPrograma ctrl; 
 	/**
 	 * Create the frame.
 	 */
 	public JanelaPrincipal(CtrlPrograma c) {
-		super(c);
+		this.ctrl = c;
 		setTitle("Menu Principal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 474, 319);
+		setBounds(100, 100, 574, 222);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -34,7 +36,6 @@ public class JanelaPrincipal extends JanelaAbstrata {
 		JButton btIncluirPessoa = new JButton("Incluir Pessoa");
 		btIncluirPessoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CtrlPrograma ctrl = (CtrlPrograma)getCtrl();
 				ctrl.iniciarIncluirPessoa();
 			}
 		});
@@ -44,7 +45,6 @@ public class JanelaPrincipal extends JanelaAbstrata {
 		JButton btIncluirContaBancaria = new JButton("Incluir Conta Bancária");
 		btIncluirContaBancaria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CtrlPrograma ctrl = (CtrlPrograma)getCtrl();
 				ctrl.iniciarIncluirContaBancaria();
 			}
 		});
@@ -54,22 +54,19 @@ public class JanelaPrincipal extends JanelaAbstrata {
 		JButton btSair = new JButton("Sair");
 		btSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CtrlPrograma ctrl = (CtrlPrograma)getCtrl();
-				ctrl.finalizar();
+				ctrl.encerrarPrograma();
 			}
 		});
-		btSair.setBounds(309, 162, 99, 63);
+		btSair.setBounds(449, 55, 99, 63);
 		contentPane.add(btSair);
-		
-		JButton btIncluirAgenciaBancaria = new JButton("Incluir Agência Bancária");
-		btIncluirAgenciaBancaria.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CtrlPrograma ctrl = (CtrlPrograma)getCtrl();
-				ctrl.iniciarIncluirAgenciaBancaria();
-			}
-		});
-		btIncluirAgenciaBancaria.setBounds(10, 162, 227, 63);
-		contentPane.add(btIncluirAgenciaBancaria);
 		this.setVisible(true);
 	}
+	
+	public void notificar(String texto) {
+		JOptionPane.showMessageDialog(null, texto);		
+	}
+
+	public void fechar() {
+		this.setVisible(false);		
+	}	
 }

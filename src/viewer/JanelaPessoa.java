@@ -15,7 +15,7 @@ import controller.CtrlIncluirPessoa;
 import model.ModelException;
 import model.Pessoa;
 
-public class JanelaPessoa extends JanelaAbstrata {
+public class JanelaPessoa extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	//
@@ -26,11 +26,23 @@ public class JanelaPessoa extends JanelaAbstrata {
 	private JTextField tfNome;
 	private JTextField tfIdade;
 	
+	//
+	// ATRIBUTOS DE RELACIONAMENTO
+	//
+	// Todo viewer deve ter um atributo para guardar a referência
+	// para o objeto Controller com quem se relaciona. No construtor,
+	// ele deve receber por parâmetro a referência de seu controlador. 
+	// Essa referência vai ser utilizada nos métodos 'actionPerformed'
+	// para enviar mensagens para o controlador. 
+	// a referência, ele deve receber em seu 
+	//
+	private CtrlIncluirPessoa ctrl;
+
 	/**
 	 * Create the frame.
 	 */
-	public JanelaPessoa(CtrlIncluirPessoa c) {
-		super(c);
+	public JanelaPessoa(CtrlIncluirPessoa ctrl) {
+		this.ctrl = ctrl;
 		setTitle("Pessoa");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -84,7 +96,6 @@ public class JanelaPessoa extends JanelaAbstrata {
 				
 				// Informando ao controlador do caso de uso que ele 
 				// deve efetuar a inclusão da pessoa
-				CtrlIncluirPessoa ctrl = (CtrlIncluirPessoa)getCtrl();
 				ctrl.efetuarInclusao(cpf, nome, idade);				
 			}
 		});
@@ -94,7 +105,6 @@ public class JanelaPessoa extends JanelaAbstrata {
 		JButton btCancelar = new JButton("Cancelar");
 		btCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CtrlIncluirPessoa ctrl = (CtrlIncluirPessoa)getCtrl();
 				ctrl.finalizar();				
 			}
 		});
@@ -102,4 +112,13 @@ public class JanelaPessoa extends JanelaAbstrata {
 		contentPane.add(btCancelar);
 		this.setVisible(true);
 	}
+	
+	public void notificar(String texto) {
+		JOptionPane.showMessageDialog(null, texto);		
+	}
+
+	public void fechar() {
+		this.setVisible(false);		
+	}
+
 }

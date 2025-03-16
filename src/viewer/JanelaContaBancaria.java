@@ -13,9 +13,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import controller.CtrlIncluirContaBancaria;
-import model.Pessoa;
 
-public class JanelaContaBancaria extends JanelaAbstrata {
+public class JanelaContaBancaria extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	//
@@ -25,16 +24,20 @@ public class JanelaContaBancaria extends JanelaAbstrata {
 	private JTextField tfNumero;
 	private JTextField tfLimite;
 	private JTextField tfSaldo;
-	private JTextField tfCorrentista;
 	
+	//
+	// Atributos de Relacionamento
+	//
+	final private CtrlIncluirContaBancaria ctrl;
+
 	/**
 	 * Create the frame.
 	 */
 	public JanelaContaBancaria(CtrlIncluirContaBancaria c) {
-		super(c);
+		this.ctrl = c;
 		setTitle("Conta Bancária");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 486, 334);
+		setBounds(100, 100, 417, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -102,47 +105,29 @@ public class JanelaContaBancaria extends JanelaAbstrata {
 					JOptionPane.showMessageDialog(null, "Valor de saldo Inválido: " + aux);
 					return;
 				}
-				CtrlIncluirContaBancaria ctrl = (CtrlIncluirContaBancaria)getCtrl();
+				
 				ctrl.efetuarInclusao(numero, limite, saldo);
 			}
 		});
-		btOk.setBounds(82, 236, 89, 23);
+		btOk.setBounds(85, 200, 89, 23);
 		contentPane.add(btOk);
 		
 		JButton btCancelar = new JButton("Cancelar");
 		btCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CtrlIncluirContaBancaria ctrl = (CtrlIncluirContaBancaria)getCtrl();
 				ctrl.finalizar();
 			}
 		});
-		btCancelar.setBounds(248, 236, 89, 23);
+		btCancelar.setBounds(251, 200, 89, 23);
 		contentPane.add(btCancelar);
-		
-		JLabel lblNewLabel_3 = new JLabel("Correntista:");
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_3.setBounds(34, 187, 77, 14);
-		contentPane.add(lblNewLabel_3);
-		
-		tfCorrentista = new JTextField();
-		tfCorrentista.setEditable(false);
-		tfCorrentista.setBounds(121, 184, 195, 20);
-		contentPane.add(tfCorrentista);
-		tfCorrentista.setColumns(10);
-		
-		JButton btIncluirPessoa = new JButton("Incluir Correntista");
-		btIncluirPessoa.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CtrlIncluirContaBancaria ctrl = (CtrlIncluirContaBancaria)getCtrl();
-				ctrl.iniciarIncluirPessoa();
-			}
-		});
-		btIncluirPessoa.setBounds(326, 183, 134, 23);
-		contentPane.add(btIncluirPessoa);
 		this.setVisible(true);
 	}
-	
-	public void indicarCorrentista(Pessoa correntista) {
-		this.tfCorrentista.setText(correntista.getNome());
+
+	public void notificar(String texto) {
+		JOptionPane.showMessageDialog(null, texto);		
+	}
+
+	public void fechar() {
+		this.setVisible(false);		
 	}
 }
