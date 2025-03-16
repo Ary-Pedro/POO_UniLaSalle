@@ -12,8 +12,9 @@ public class CtrlPrograma extends CtrlAbstrato{
 	// uso que o usuário puder disparar a partir desse menu.
 	//
 	private JanelaPrincipal janela;
-	private CtrlIncluirPessoa ctrlIncluirPessoa;
-	private CtrlIncluirContaBancaria ctrlIncluirContaBancaria;
+	private CtrlIncluirPessoa 			ctrlIncluirPessoa;
+	private CtrlIncluirContaBancaria 	ctrlIncluirContaBancaria;
+	private CtrlIncluirAgenciaBancaria 	ctrlIncluirAgenciaBancaria;
 
 	//
 	// MÉTODOS
@@ -25,6 +26,7 @@ public class CtrlPrograma extends CtrlAbstrato{
 		this.janela = new JanelaPrincipal(this);
 		this.ctrlIncluirPessoa = null;
 		this.ctrlIncluirContaBancaria = null;
+		this.ctrlIncluirAgenciaBancaria = null;
 	}
 
 	public void iniciarIncluirPessoa() {
@@ -47,11 +49,23 @@ public class CtrlPrograma extends CtrlAbstrato{
 			this.janela.notificar("Você já iniciou a funcionalidade de Incluir Conta Bancária");
 	}
 
+	public void iniciarIncluirAgenciaBancaria() {
+		// Verificando se o caso de uso não está em execução
+		if (this.ctrlIncluirAgenciaBancaria == null)
+			// Se não estiver, inicio a execução do caso de uso
+			this.ctrlIncluirAgenciaBancaria = new CtrlIncluirAgenciaBancaria(this);
+		else
+			// Se já estou executando o caso de uso, aviso que a funcionalidade está rodando
+			this.janela.notificar("Você já iniciou a funcionalidade de Incluir Agência Bancária");
+	}
+
 	public void ctrlFilhoFinalizado(ICtrl ctrlFilho) {
 		if(ctrlFilho instanceof CtrlIncluirPessoa)			
 			this.ctrlIncluirPessoa = null;
 		else if(ctrlFilho instanceof CtrlIncluirContaBancaria)
 			this.ctrlIncluirContaBancaria = null;
+		else if(ctrlFilho instanceof CtrlIncluirAgenciaBancaria)
+			this.ctrlIncluirAgenciaBancaria = null;
 	}
 
 	/**

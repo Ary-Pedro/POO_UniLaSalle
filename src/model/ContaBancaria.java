@@ -26,15 +26,22 @@ public class ContaBancaria {
 	private double saldo;
 	
 	//
+	// ATRIBUTOS DE RELACIONAMENTO
+	//
+	private Pessoa correntista;
+	
+	//
 	// MÉTODOS
 	//
 	public ContaBancaria(int numContaCorrente, 
 			             double limiteChequeEspecial, 
-			             double saldo) throws ModelException {
+			             double saldo,
+			             Pessoa correntista) throws ModelException {
 		super();
 		this.setNumContaCorrente(numContaCorrente);
 		this.setLimiteChequeEspecial(limiteChequeEspecial);
 		this.setSaldo(saldo);
+		this.setCorrentista(correntista);
 	}
 
 	public int getNumContaCorrente() {
@@ -64,6 +71,15 @@ public class ContaBancaria {
 		this.saldo = saldo;
 	}
 	
+	public Pessoa getCorrentista() {
+		return this.correntista;
+	}
+
+	public void setCorrentista(Pessoa correntista) throws ModelException {
+		ContaBancaria.validarCorrentista(correntista);
+		this.correntista = correntista;
+	}
+	
 	//
 	// Métodos de Validação
 	//	
@@ -81,6 +97,11 @@ public class ContaBancaria {
 		if(saldo < -VALOR_MAX_LIMITE)
 			throw new ModelException("O saldo (" + saldo + ") não pode ser menor que valor do limite da conta: " + limite);
 	}
+	
+	public static void validarCorrentista(Pessoa correntista) throws ModelException {
+		if(correntista == null)
+			throw new ModelException("A conta precisa ter um correntista!");
+	}	
 }
 
 

@@ -18,7 +18,7 @@ public class CtrlIncluirPessoa extends CtrlAbstrato {
 	//
 	// MÉTODOS
 	//
-	public CtrlIncluirPessoa(CtrlPrograma c) {
+	public CtrlIncluirPessoa(ICtrl c) {
 		super(c);
 		this.meuViewer = new JanelaPessoa(this);
 		this.pessoaCriada = null;
@@ -32,13 +32,16 @@ public class CtrlIncluirPessoa extends CtrlAbstrato {
 			this.meuViewer.notificar("Erro: " + e1);
 			return;
 		}
+		
 		// TODO Fazer os procedimentos de persistência
 		
 		this.finalizar();
 	}
 	
 	public void finalizar() {
+		// Fecho a apresentação do viewer
 		this.meuViewer.finalizar();
+		// Notifica ao caso de uso "pai" que o caso de uso "incluir pessoa" terminou!
 		this.getCtrlPai().ctrlFilhoFinalizado(this);
 	}
 	

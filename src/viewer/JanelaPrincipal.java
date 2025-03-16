@@ -24,7 +24,7 @@ public class JanelaPrincipal extends JanelaAbstrata {
 		super(c);
 		setTitle("Menu Principal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 574, 222);
+		setBounds(100, 100, 474, 319);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -58,8 +58,18 @@ public class JanelaPrincipal extends JanelaAbstrata {
 				ctrl.finalizar();
 			}
 		});
-		btSair.setBounds(449, 55, 99, 63);
+		btSair.setBounds(309, 162, 99, 63);
 		contentPane.add(btSair);
+		
+		JButton btIncluirAgenciaBancaria = new JButton("Incluir Agência Bancária");
+		btIncluirAgenciaBancaria.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CtrlPrograma ctrl = (CtrlPrograma)getCtrl();
+				ctrl.iniciarIncluirAgenciaBancaria();
+			}
+		});
+		btIncluirAgenciaBancaria.setBounds(10, 162, 227, 63);
+		contentPane.add(btIncluirAgenciaBancaria);
 		this.setVisible(true);
 	}
 }
