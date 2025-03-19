@@ -26,9 +26,10 @@ public class ContaBancaria {
 	private double saldo;
 	
 	//
-	// ATRIBUTOS DE RELACIONAMENTO
+	// ATRIBUTO DE RELACIONAMENTO
 	//
 	private Pessoa correntista;
+	private AgenciaBancaria agencia;
 	
 	//
 	// MÉTODOS
@@ -36,12 +37,14 @@ public class ContaBancaria {
 	public ContaBancaria(int numContaCorrente, 
 			             double limiteChequeEspecial, 
 			             double saldo,
-			             Pessoa correntista) throws ModelException {
+			             Pessoa correntista,
+			             AgenciaBancaria agencia) throws ModelException {
 		super();
 		this.setNumContaCorrente(numContaCorrente);
 		this.setLimiteChequeEspecial(limiteChequeEspecial);
 		this.setSaldo(saldo);
 		this.setCorrentista(correntista);
+		this.setAgencia(agencia);
 	}
 
 	public int getNumContaCorrente() {
@@ -80,6 +83,15 @@ public class ContaBancaria {
 		this.correntista = correntista;
 	}
 	
+	public AgenciaBancaria getAgencia() {
+		return this.agencia;
+	}
+
+	public void setAgencia(AgenciaBancaria agencia) throws ModelException {
+		ContaBancaria.validarAgencia(agencia);
+		this.agencia = agencia;
+	}
+	
 	//
 	// Métodos de Validação
 	//	
@@ -97,11 +109,16 @@ public class ContaBancaria {
 		if(saldo < -VALOR_MAX_LIMITE)
 			throw new ModelException("O saldo (" + saldo + ") não pode ser menor que valor do limite da conta: " + limite);
 	}
-	
+
 	public static void validarCorrentista(Pessoa correntista) throws ModelException {
 		if(correntista == null)
-			throw new ModelException("A conta precisa ter um correntista!");
-	}	
+			throw new ModelException("É obrigatório indicar quem é o correntista dono da conta");
+	}
+
+	public static void validarAgencia(AgenciaBancaria agencia) throws ModelException {
+		if(agencia == null)
+			throw new ModelException("É obrigatório indicar qual é a agência da conta");
+	}
 }
 
 

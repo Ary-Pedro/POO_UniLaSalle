@@ -11,10 +11,10 @@ public class CtrlPrograma extends CtrlAbstrato{
 	// com o menu principal do sistema e um atributo para cada caso de
 	// uso que o usuário puder disparar a partir desse menu.
 	//
-	private JanelaPrincipal janela;
-	private CtrlIncluirPessoa 			ctrlIncluirPessoa;
-	private CtrlIncluirContaBancaria 	ctrlIncluirContaBancaria;
-	private CtrlIncluirAgenciaBancaria 	ctrlIncluirAgenciaBancaria;
+	private JanelaPrincipal            janela;
+	private CtrlIncluirPessoa          ctrlIncluirPessoa;
+	private CtrlIncluirContaBancaria   ctrlIncluirContaBancaria;
+	private CtrlIncluirAgenciaBancaria ctrlIncluirAgenciaBancaria;
 
 	//
 	// MÉTODOS
@@ -59,6 +59,7 @@ public class CtrlPrograma extends CtrlAbstrato{
 			this.janela.notificar("Você já iniciou a funcionalidade de Incluir Agência Bancária");
 	}
 
+	@Override
 	public void ctrlFilhoFinalizado(ICtrl ctrlFilho) {
 		if(ctrlFilho instanceof CtrlIncluirPessoa)			
 			this.ctrlIncluirPessoa = null;

@@ -1,37 +1,55 @@
 package controller;
 
+import model.AgenciaBancaria;
 import model.ContaBancaria;
 import model.ModelException;
 import model.Pessoa;
+import model.dao.DaoAgenciaBancaria;
+import model.dao.DaoContaBancaria;
+import model.dao.DaoPessoa;
 import viewer.JanelaContaBancaria;
 
 public class CtrlIncluirContaBancaria extends CtrlAbstrato {
 	//
-	// ATRIBUTOS 
-	// 
+	// ATRIBUTOS
+	//
 	// Todo Controlador deve ter um atributo para guardar a referência
 	// para o objeto viewer com quem se relaciona.
 	//
-	private JanelaContaBancaria janela;	
-	private ContaBancaria       contaBancariaCriada;
-
-	//
-	// ATRIBUTOS DE RELACIONAMENTO
-	//
-	private CtrlIncluirPessoa	ctrlIncluirPessoa;
-	private Pessoa				pessoaCorrentista;
+	private JanelaContaBancaria janela;
+	private ContaBancaria contaBancariaCriada;
+	// Como teremos uma relação entre o caso de uso "Incluir Conta Bancária"
+	// com "Incluir Pessoa", então precisamos colocar esse atributo para
+	// disparar a execução desse caso de uso <<include>>
+	private CtrlIncluirPessoa ctrlIncluirPessoa;
+	private Pessoa            correntista;
+	// Como teremos uma relação entre o caso de uso "Incluir Conta Bancária"
+	// com "Incluir Agência Bancária", então precisamos colocar esse atributo para
+	// disparar a execução desse caso de uso <<include>>
+	private CtrlIncluirAgenciaBancaria ctrlIncluirAgenciaBancaria;
+	private AgenciaBancaria agencia;
 	
 	//
 	// MÉTODOS
 	//
 	public CtrlIncluirContaBancaria(CtrlPrograma c) {
 		super(c);
-		this.contaBancariaCriada = null;
-		this.janela = new JanelaContaBancaria(this);
 		this.ctrlIncluirPessoa = null;
-		this.pessoaCorrentista = null;
+		this.ctrlIncluirAgenciaBancaria = null;
+		this.contaBancariaCriada = null;
+		DaoPessoa daoPessoas = new DaoPessoa();
+		DaoAgenciaBancaria daoAgenciaBancaria = new DaoAgenciaBancaria();
+		
+		this.janela = new JanelaContaBancaria(this, 
+				                              daoPessoas.consultarTodos(), 
+				 							  daoAgenciaBancaria.consultarTodos());
+		this.janela.apresentar();
 	}
-	
+
+	/**
+	 * Método usado pelo viewer para indicar que o usuário quer executar o
+	 * caso de uso "Incluir Pessoa" (relacionamento de <<extend>>)
+	 */
 	public void iniciarIncluirPessoa() {
 		// Verificando se o caso de uso não está em execução
 		if (this.ctrlIncluirPessoa == null)
@@ -41,39 +59,65 @@ public class CtrlIncluirContaBancaria extends CtrlAbstrato {
 			// Se já estou executando o caso de uso, aviso que a funcionalidade está rodando
 			this.janela.notificar("Você já iniciou a funcionalidade de Incluir Pessoa");
 	}
-	
+
 	/**
-	 * Método que o CtrlIncluirPessoa irá usar para informar que ele terminou
+	 * Método usado pelo viewer para indicar que o usuário quer executar o
+	 * caso de uso "Incluir Agência Bancária" (relacionamento de <<extend>>)
 	 */
-	public void ctrlFilhoFinalizado(ICtrl ctrlFilho) {
-		CtrlIncluirPessoa ctrlIncluirPessoa = (CtrlIncluirPessoa)ctrlFilho;
-		this.pessoaCorrentista = (Pessoa)ctrlIncluirPessoa.getBemTangivel();
-		this.janela.indicarCorrentista(this.pessoaCorrentista);
-		this.ctrlIncluirPessoa = null;		
+	public void iniciarIncluirAgenciaBancaria() {
+		// Verificando se o caso de uso não está em execução
+		if (this.ctrlIncluirAgenciaBancaria == null)
+			// Se não estiver, inicio a execução do caso de uso
+			this.ctrlIncluirAgenciaBancaria = new CtrlIncluirAgenciaBancaria(this);
+		else
+			// Se já estou executando o caso de uso, aviso que a funcionalidade está rodando
+			this.janela.notificar("Você já iniciou a funcionalidade de Incluir Agência Bancária");
 	}
-	
-	public void efetuarInclusao(int numero, double limite, double saldo) {
+
+	@Override
+	public void ctrlFilhoFinalizado(ICtrl ctrlFilho) {
+		if (ctrlFilho instanceof CtrlIncluirPessoa) {			
+			this.correntista = (Pessoa)this.ctrlIncluirPessoa.getBemTangivel();
+			if(this.correntista != null)
+				this.janela.atualizarCorrentista(this.correntista);
+		} else if (ctrlFilho instanceof CtrlIncluirAgenciaBancaria) {			
+			this.agencia = (AgenciaBancaria)this.ctrlIncluirAgenciaBancaria.getBemTangivel();
+			if(this.agencia != null)
+				this.janela.atualizarAgencia(this.agencia);
+		}
+	}
+
+	public void efetuarInclusao(int numero, double limite, double saldo, 
+			                    Pessoa correntista, AgenciaBancaria agencia) {
 		try {
-			this.contaBancariaCriada = new ContaBancaria(numero, limite, saldo, this.pessoaCorrentista);
+			if(correntista == null) {
+				this.janela.notificar("Você ainda não definiu o correntista");
+				return;
+			}
+			if(agencia == null) {
+				this.janela.notificar("Você ainda não definiu a agência");
+				return;
+			}
+			this.contaBancariaCriada = new ContaBancaria(numero, limite, saldo,  
+					                                     correntista, agencia);
 		} catch (ModelException e1) {
 			this.janela.notificar("Erro: " + e1);
 			return;
 		}
-		
-		// TODO Fazer os procedimentos de persistência
-		
+		DaoContaBancaria dao = new DaoContaBancaria();
+		dao.incluir(this.contaBancariaCriada);
 		this.finalizar();
 	}
-	
+
 	public void finalizar() {
 		this.janela.finalizar();
 		this.getCtrlPai().ctrlFilhoFinalizado(this);
 	}
 
 	/**
-	 * Retorna a referência para a conta bancária gerada (se tudo 
-	 * ocorreu corretamente) ou null (se o caso de uso não terminou
-	 * ou se houve falha na execução)
+	 * Retorna a referência para a conta bancária gerada (se tudo ocorreu
+	 * corretamente) ou null (se o caso de uso não terminou ou se houve falha na
+	 * execução)
 	 */
 	public Object getBemTangivel() {
 		return this.contaBancariaCriada;

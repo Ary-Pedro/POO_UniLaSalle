@@ -51,7 +51,10 @@ public class Pessoa {
 		Pessoa.validarIdade(idade);
 		this.idade = idade;
 	}
-	
+
+	public String toString() {
+		return this.nome;
+	}
 	//
 	// Métodos de Validação
 	//

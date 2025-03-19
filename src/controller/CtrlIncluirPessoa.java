@@ -2,6 +2,7 @@ package controller;
 
 import model.ModelException;
 import model.Pessoa;
+import model.dao.DaoPessoa;
 import viewer.IViewer;
 import viewer.JanelaPessoa;
 
@@ -20,7 +21,9 @@ public class CtrlIncluirPessoa extends CtrlAbstrato {
 	//
 	public CtrlIncluirPessoa(ICtrl c) {
 		super(c);
-		this.meuViewer = new JanelaPessoa(this);
+		this.meuViewer = new JanelaPessoa(this); 
+		// experimente trocar por 
+		// this.meuViewer = new ConsolePessoa(this);
 		this.pessoaCriada = null;
 		this.meuViewer.apresentar();
 	}
@@ -32,16 +35,13 @@ public class CtrlIncluirPessoa extends CtrlAbstrato {
 			this.meuViewer.notificar("Erro: " + e1);
 			return;
 		}
-		
-		// TODO Fazer os procedimentos de persistência
-		
+		DaoPessoa dao = new DaoPessoa();
+		dao.incluir(this.pessoaCriada);
 		this.finalizar();
 	}
 	
 	public void finalizar() {
-		// Fecho a apresentação do viewer
 		this.meuViewer.finalizar();
-		// Notifica ao caso de uso "pai" que o caso de uso "incluir pessoa" terminou!
 		this.getCtrlPai().ctrlFilhoFinalizado(this);
 	}
 	

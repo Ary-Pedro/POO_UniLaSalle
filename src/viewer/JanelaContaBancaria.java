@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -13,6 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import controller.CtrlIncluirContaBancaria;
+import model.AgenciaBancaria;
 import model.Pessoa;
 
 public class JanelaContaBancaria extends JanelaAbstrata {
@@ -25,16 +27,19 @@ public class JanelaContaBancaria extends JanelaAbstrata {
 	private JTextField tfNumero;
 	private JTextField tfLimite;
 	private JTextField tfSaldo;
-	private JTextField tfCorrentista;
+	private JComboBox cbCorrentista;
+	private JComboBox cbAgencia;
 	
 	/**
 	 * Create the frame.
 	 */
-	public JanelaContaBancaria(CtrlIncluirContaBancaria c) {
+	public JanelaContaBancaria(CtrlIncluirContaBancaria c, 
+			                   Pessoa[] conjPessoas, 
+			                   AgenciaBancaria[] conjAgencias) {
 		super(c);
 		setTitle("Conta Bancária");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 486, 334);
+		setBounds(100, 100, 598, 356);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -92,7 +97,6 @@ public class JanelaContaBancaria extends JanelaAbstrata {
 					JOptionPane.showMessageDialog(null, "Valor de limite Inválido: " + aux);
 					return;
 				}
-
 				
 				aux = tfSaldo.getText();
 				double saldo;
@@ -103,10 +107,12 @@ public class JanelaContaBancaria extends JanelaAbstrata {
 					return;
 				}
 				CtrlIncluirContaBancaria ctrl = (CtrlIncluirContaBancaria)getCtrl();
-				ctrl.efetuarInclusao(numero, limite, saldo);
+				ctrl.efetuarInclusao(numero, limite, saldo, 
+						             (Pessoa)cbCorrentista.getSelectedItem(), 
+						             (AgenciaBancaria)cbAgencia.getSelectedItem());
 			}
 		});
-		btOk.setBounds(82, 236, 89, 23);
+		btOk.setBounds(131, 269, 89, 23);
 		contentPane.add(btOk);
 		
 		JButton btCancelar = new JButton("Cancelar");
@@ -116,33 +122,56 @@ public class JanelaContaBancaria extends JanelaAbstrata {
 				ctrl.finalizar();
 			}
 		});
-		btCancelar.setBounds(248, 236, 89, 23);
+		btCancelar.setBounds(297, 269, 89, 23);
 		contentPane.add(btCancelar);
 		
-		JLabel lblNewLabel_3 = new JLabel("Correntista:");
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_3.setBounds(34, 187, 77, 14);
-		contentPane.add(lblNewLabel_3);
+		JLabel lblNewLabel_2_1 = new JLabel("Correntista:");
+		lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_2_1.setBounds(10, 179, 101, 14);
+		contentPane.add(lblNewLabel_2_1);
 		
-		tfCorrentista = new JTextField();
-		tfCorrentista.setEditable(false);
-		tfCorrentista.setBounds(121, 184, 195, 20);
-		contentPane.add(tfCorrentista);
-		tfCorrentista.setColumns(10);
-		
-		JButton btIncluirPessoa = new JButton("Incluir Correntista");
+		JButton btIncluirPessoa = new JButton("Incluir Novo Correntista");
 		btIncluirPessoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CtrlIncluirContaBancaria ctrl = (CtrlIncluirContaBancaria)getCtrl();
 				ctrl.iniciarIncluirPessoa();
 			}
 		});
-		btIncluirPessoa.setBounds(326, 183, 134, 23);
+		btIncluirPessoa.setBounds(327, 175, 213, 23);
 		contentPane.add(btIncluirPessoa);
+		
+		JLabel lblNewLabel_2_1_1 = new JLabel("Agência:");
+		lblNewLabel_2_1_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_2_1_1.setBounds(10, 226, 101, 14);
+		contentPane.add(lblNewLabel_2_1_1);
+		
+		JButton btAgencia = new JButton("Incluir Nova Agência");
+		btAgencia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CtrlIncluirContaBancaria ctrl = (CtrlIncluirContaBancaria)getCtrl();
+				ctrl.iniciarIncluirAgenciaBancaria();
+			}
+		});
+		btAgencia.setBounds(327, 222, 213, 23);
+		contentPane.add(btAgencia);
+		
+		cbCorrentista = new JComboBox(conjPessoas);
+		cbCorrentista.setBounds(121, 175, 185, 22);
+		contentPane.add(cbCorrentista);
+		
+		cbAgencia = new JComboBox(conjAgencias);
+		cbAgencia.setBounds(121, 222, 185, 22);
+		contentPane.add(cbAgencia);
 		this.setVisible(true);
 	}
 	
-	public void indicarCorrentista(Pessoa correntista) {
-		this.tfCorrentista.setText(correntista.getNome());
+	public void atualizarCorrentista(Pessoa nova) {
+		this.cbCorrentista.addItem(nova);
+		this.cbCorrentista.setSelectedItem(nova);
+	}
+
+	public void atualizarAgencia(AgenciaBancaria nova) {
+		this.cbAgencia.addItem(nova);
+		this.cbAgencia.setSelectedItem(nova);
 	}
 }

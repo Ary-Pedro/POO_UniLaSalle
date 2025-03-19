@@ -5,7 +5,7 @@ import java.util.Scanner;
 import controller.CtrlIncluirPessoa;
 import controller.ICtrl;
 
-public class ConsolePessoa implements IViewer {
+public class ConsolePessoa extends Thread implements IViewer {
 
 	private CtrlIncluirPessoa ctrl;
 	private String cpf;
@@ -17,6 +17,10 @@ public class ConsolePessoa implements IViewer {
 	}
 	
 	public void apresentar() {
+		this.start();
+	}
+	
+	public void run() {
 		System.out.println("Criação de Pessoa");
 		System.out.println("=================");
 		Scanner teclado = new Scanner(System.in);
